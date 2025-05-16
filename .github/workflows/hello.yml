@@ -1,10 +1,13 @@
-name: Print Hello
+name: Checkout Example
 
 on: workflow_dispatch
 
 jobs:
-  print-hello:
-    runs-on: ubuntu-22.04
+  checkout-repository:
+    runs-on: ubuntu-22.04  # ✅ Use updated version
     steps:
-      - name: Print
-        run: echo "Hello, world!"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: List files in repo
+        run: ls -la $GITHUB_WORKSPACE
