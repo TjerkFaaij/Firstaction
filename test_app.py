@@ -1,5 +1,7 @@
-import app.app as app
+from app import app
 
-def test_power():
-    assert app.power(2,2) == 4
-    assert app.power(2,3) == 8
+def test_homepage():
+    with app.test_client() as client:
+        response = client.get('/')
+        assert response.status_code == 200
+        assert b"Hello, world!" in response.data
