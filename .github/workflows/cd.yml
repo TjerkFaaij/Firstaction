@@ -10,30 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Run tests
+        run: |
+          pip install -r requirements.txt
+          pytest test_app.py
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-
-    - name: Run tests
-      run: |
-        pytest test_app.py
-
-    - name: Deploy to VPS
-      if: success()
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /path/to/your/app
-          git pull
-          systemctl restart ${{ secrets.APP_NAME }}
+      - name: Deploy to VPS
+        if: success()
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd /root
+            git pull
+            systemctl restart farm.service
