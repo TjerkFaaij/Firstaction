@@ -1,17 +1,39 @@
-name: Run Tests
+name: CD Pipeline
 
-on: push
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  run-tests:
-    runs-on: ubuntu-22.04
+  deploy:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Setup Python 3.11
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.11.0'
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Run tests
-        run: pytest
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest test_app.py
+
+    - name: Deploy to VPS
+      if: success()
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /path/to/your/app
+          git pull
+          systemctl restart ${{ secrets.APP_NAME }}
