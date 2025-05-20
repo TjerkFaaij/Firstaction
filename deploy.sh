@@ -4,6 +4,11 @@ echo "Starting deployment..."
 
 cd /path/to/your/app || exit
 
+pwd
+ls
+git status
+git remote -v
+
 echo "Pulling latest changes..."
 git pull
 
