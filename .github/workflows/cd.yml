@@ -6,17 +6,26 @@ on:
       - main
 
 jobs:
-  deploy:
+  testjob:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+      
+      
       - name: Run tests
         run: |
           pip install -r requirements.txt
           pytest test_app.py
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: testjob
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Deploy to VPS
         if: success()
