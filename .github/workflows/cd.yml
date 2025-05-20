@@ -27,7 +27,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /root
-            git pull
+            cd /root/my-project
+            git pull origin main
             systemctl restart farm.service
             systemctl status my-project
