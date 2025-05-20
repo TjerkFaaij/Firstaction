@@ -25,7 +25,9 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
             cd /root
             git pull
             systemctl restart farm.service
+            systemctl status my-project
